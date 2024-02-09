@@ -1,30 +1,30 @@
 import json
 
-class Todos:
+class Expenses:
     def __init__(self):
         try:
-            with open("todos.json", "r") as f:
-                self.todos = json.load(f)
+            with open("expenses.json", "r") as filename:
+                self.expenses = json.load(filename)
         except FileNotFoundError:
-            self.todos = []
+            self.expenses = []
 
     def all(self):
-        return self.todos
+        return self.expenses
 
     def get(self, id):
-        return self.todos[id]
+        return self.expenses[id]
 
     def create(self, data):
         data.pop('csrf_token')
-        self.todos.append(data)
+        self.expenses.append(data)
 
     def save_all(self):
-        with open("todos.json", "w") as f:
-            json.dump(self.todos, f)
+        with open("expenses.json", "w") as filename:
+            json.dump(self.expenses, filename)
 
     def update(self, id, data):
         data.pop('csrf_token')
-        self.todos[id] = data
+        self.expenses[id] = data
         self.save_all()
 
-todos = Todos()
+expenses = Expenses()
