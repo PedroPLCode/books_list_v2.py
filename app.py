@@ -16,11 +16,36 @@ def get_expense_api_v1(expense_id):
         abort(404)
     return jsonify({"expense": expense})
 
+@app.route("/api/v1/expenses/", methods=["POST"])
+def create_expense_api_v1():
+    if not request.json or not 'title' in request.json:
+        abort(400)
+    expense = {
+        'id': expenses.all()[-1]['id'] + 1,
+        'title': request.json['title'],
+        'description': request.json.get('description', ""),
+        'paid': False
+    }
+    expenses.create(expense)
+    return jsonify({'expense': expense}), 201
+
+@app.route("/api/v1/expenses/<int:expense_id>", methods=['DELETE'])
+def delete_expense_api_v1(expense_id):
+    result = expenses.delete(expense_id)
+    if not result:
+        abort(404)
+    return jsonify({'result': result})
+
+
 
 
 @app.errorhandler(404)
 def not_found(error):
     return make_response(jsonify({'error': 'Not found', 'status_code': 404}), 404)
+
+@app.errorhandler(400)
+def bad_request(error):
+    return make_response(jsonify({'error': 'Bad request', 'status_code': 400}), 400)
 
 @app.route("/expenses/", methods=["GET", "POST"])
 def expenses_list():

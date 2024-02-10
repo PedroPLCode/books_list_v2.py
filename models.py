@@ -16,10 +16,18 @@ class Expenses:
         if expense:
             return expense[0]
         return []
-
+    
     def create(self, data):
-        data.pop('csrf_token')
         self.expenses.append(data)
+        self.save_all()
+        
+    def delete(self, id):
+        expense = self.get(id)
+        if expense:
+            self.expenses.remove(expense)
+            self.save_all()
+            return True
+        return False
 
     def save_all(self):
         with open("expenses.json", "w") as filename:
