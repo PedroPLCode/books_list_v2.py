@@ -10,9 +10,12 @@ class Expenses:
 
     def all(self):
         return self.expenses
-
+    
     def get(self, id):
-        return self.expenses[id]
+        expense = [expense for expense in self.all() if expense['id'] == id]
+        if expense:
+            return expense[0]
+        return []
 
     def create(self, data):
         data.pop('csrf_token')

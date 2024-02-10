@@ -1,9 +1,24 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, jsonify, abort, request, render_template, redirect, url_for
 from forms import ExpenseForm
 from models import expenses
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "sratatata"
+
+@app.route("/api/v1/expenses/", methods=["GET"])
+def expenses_list_api_v1():
+    return jsonify(expenses.all())
+
+@app.route("/api/v1/expenses/<int:expense_id>", methods=["GET"])
+def get_expense_api_v1(expense_id):
+    expense = expenses.get(expense_id)
+    if not expense:
+        abort(404)
+    return jsonify({"expense": expense})
+
+
+
+
 
 @app.route("/expenses/", methods=["GET", "POST"])
 def expenses_list():
