@@ -18,6 +18,7 @@ class Expenses:
         return []
     
     def create(self, data):
+        data['id'] = expenses.all()[-1]['id'] + 1
         self.expenses.append(data)
         self.save_all()
         
@@ -36,6 +37,7 @@ class Expenses:
     def update(self, id, data):
         expense = self.get(id)
         if expense:
+            data['id'] = id
             index = self.expenses.index(expense)
             self.expenses[index] = data
             self.save_all()

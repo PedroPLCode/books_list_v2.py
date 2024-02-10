@@ -1,10 +1,12 @@
 Lista wydatków
 
-/expenses/ Formularz wyświatlający wydatki
-/expenses/<id>
+z przegladarki:
+/expenses/                        - formularz wyświatlający liste wydatkow
+/expenses/<id>                    - formularz pozwalajacy na zmiane wybranego wydatku
 
-GET    /api/v1/expenses/          - pobranie listy
-POST   /api/v1/expenses/          - utworzenie nowego todo
-GET    /api/v1/expenses/<id>      - pobranie szczegółów todo dla danego id
-DELETE /api/v1/expenses/<id>      - usunięcie todo
-PUT    /api/v1/expenses/<id>      - update wybranego todo (nadpisanie całego zasobu)
+REST API:
+GET    /api/v1/expenses/          - pobranie listy wydatkow
+POST   /api/v1/expenses/          - utworzenie nowego wydatku
+GET    /api/v1/expenses/<id>      - pobranie szczegółów wydatku dla danego id
+DELETE /api/v1/expenses/<id>      - usunięcie wydatku o danym id
+PUT    /api/v1/expenses/<id>      - update wybranego wydatku (nadpisanie całego zasobu)
