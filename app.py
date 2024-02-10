@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, abort, request, render_template, redirect, url_for
+from flask import Flask, jsonify, abort, make_response, request, render_template, redirect, url_for
 from forms import ExpenseForm
 from models import expenses
 
@@ -18,7 +18,9 @@ def get_expense_api_v1(expense_id):
 
 
 
-
+@app.errorhandler(404)
+def not_found(error):
+    return make_response(jsonify({'error': 'Not found', 'status_code': 404}), 404)
 
 @app.route("/expenses/", methods=["GET", "POST"])
 def expenses_list():
