@@ -34,8 +34,12 @@ class Expenses:
             json.dump(self.expenses, filename)
 
     def update(self, id, data):
-        data.pop('csrf_token')
-        self.expenses[id] = data
-        self.save_all()
+        expense = self.get(id)
+        if expense:
+            index = self.expenses.index(expense)
+            self.expenses[index] = data
+            self.save_all()
+            return True
+        return False
 
 expenses = Expenses()

@@ -36,6 +36,28 @@ def delete_expense_api_v1(expense_id):
         abort(404)
     return jsonify({'result': result})
 
+@app.route("/api/v1/expenses/<int:expense_id>", methods=["PUT"])
+def update_expense_api_v1(expense_id):
+    expense = expenses.get(expense_id)
+    if not expense:
+        abort(404)
+    if not request.json:
+        abort(400)
+    data = request.json
+    if any([
+        'title' in data and not isinstance(data.get('title'), str),
+        'description' in data and not isinstance(data.get('description'), str),
+        'paid' in data and not isinstance(data.get('paid'), bool)
+    ]):
+        abort(400)
+    expense = {
+        'title': data.get('title', expense['title']),
+        'description': data.get('description', expense['description']),
+        'paid': data.get('paid', expense['paid'])
+    }
+    expenses.update(expense_id, expense)
+    return jsonify({'expense': expense})
+
 
 
 
