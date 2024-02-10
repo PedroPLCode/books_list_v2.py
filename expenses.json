@@ -14,7 +14,7 @@
     {
         "title": "Balet",
         "description": "Szkola tanca",
-        "paid": true,
+        "paid": false,
         "id": 3
     },
     {

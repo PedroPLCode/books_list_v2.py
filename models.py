@@ -17,6 +17,12 @@ class Expenses:
             return expense[0]
         return []
     
+    def get_expenses_filtered_by_paid(self, is_paid):
+        filtered = [expense for expense in self.all() if expense['paid'] == is_paid]
+        if filtered:
+            return filtered
+        return []
+    
     def create(self, data):
         data['id'] = expenses.all()[-1]['id'] + 1
         self.expenses.append(data)

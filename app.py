@@ -7,6 +7,11 @@ app.config["SECRET_KEY"] = "sratatata"
 
 @app.route("/api/v1/expenses/", methods=["GET"])
 def expenses_list_api_v1():
+    paid_parameter = request.args.get("paid")
+    if paid_parameter:
+        paid_filter = True if paid_parameter == 'true' else False
+        filtered = expenses.get_expenses_filtered_by_paid(paid_filter)
+        return jsonify(filtered)
     return jsonify(expenses.all())
 
 
