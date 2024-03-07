@@ -1,53 +1,53 @@
 import json
 
-class Expenses:
+class Books:
     def __init__(self):
         try:
-            with open("expenses.json", "r") as filename:
-                self.expenses = json.load(filename)
+            with open("books.json", "r") as filename:
+                self.books = json.load(filename)
         except FileNotFoundError:
-            self.expenses = []
+            self.books = []
 
     def all(self):
-        return self.expenses
+        return self.books
     
     def get(self, id):
-        expense = [expense for expense in self.all() if expense['id'] == id]
-        if expense:
-            return expense[0]
+        book = [book for book in self.all() if book['id'] == id]
+        if book:
+            return book[0]
         return []
     
-    def get_expenses_filtered_by_paid(self, is_paid):
-        filtered = [expense for expense in self.all() if expense['paid'] == is_paid]
+    def get_books_filtered_by_lent(self, is_lent):
+        filtered = [book for book in self.all() if book['lent'] == is_lent]
         if filtered:
             return filtered
         return []
     
     def create(self, data):
-        data['id'] = expenses.all()[-1]['id'] + 1
-        self.expenses.append(data)
+        data['id'] = books.all()[-1]['id'] + 1
+        self.books.append(data)
         self.save_all()
         
     def delete(self, id):
-        expense = self.get(id)
-        if expense:
-            self.expenses.remove(expense)
+        book = self.get(id)
+        if book:
+            self.books.remove(book)
             self.save_all()
             return True
         return False
 
     def save_all(self):
-        with open("expenses.json", "w") as filename:
-            json.dump(self.expenses, filename)
+        with open("books.json", "w") as filename:
+            json.dump(self.books, filename)
 
     def update(self, id, data):
-        expense = self.get(id)
-        if expense:
+        book = self.get(id)
+        if book:
             data['id'] = id
-            index = self.expenses.index(expense)
-            self.expenses[index] = data
+            index = self.books.index(book)
+            self.books[index] = data
             self.save_all()
             return True
         return False
 
-expenses = Expenses()
+books = Books()

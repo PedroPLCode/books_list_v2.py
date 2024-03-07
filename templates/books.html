@@ -2,31 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Lista wydatków</title>
+    <title>Lista książek</title>
     <style>
         table, th, tr, td {border: 1px solid black;}
     </style>
 </head>
 
-<h2>Lista wydatków</h2>
+<h2>Lista książek</h2>
 
 <table>
     <thead>
     <th>Nazwa</th>
-    <th>Opis</th>
-    <th>Czy zapłacone?</th>
+    <th>Autor</th>
+    <th>Czy pożyczona?</th>
     </thead>
-{% for expense in expenses %}
+{% for book in books %}
     <tr>
-        <td><a href="/expenses/{{ loop.index }}">{{ expense.title }}</a></td>
-        <td>{{ expense.description }}</td>
-        <td>{{ expense.paid }}</td>
+        <td><a href="/books/{{ loop.index }}">{{ book.title }}</a></td>
+        <td>{{ book.author }}</td>
+        <td>{{ book.lent }}</td>
     </tr>
 {% endfor %}
 </table>
 <div>
-    <h2> Dodaj nowy wydatek: </h2>
-    <form method="POST" action="/expenses/">
+    <h2> Dodaj nową książkę: </h2>
+    <form method="POST" action="/books/">
         {{ form.hidden_tag() }}
         <table>
             {% for field in form if field.widget.input_type != 'hidden' %}

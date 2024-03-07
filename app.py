@@ -1,71 +1,71 @@
 from flask import Flask, jsonify, abort, make_response, request, render_template, redirect, url_for
-from forms import ExpenseForm
-from models import expenses
+from forms import BookForm
+from models import books
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "sratatata"
 
-@app.route("/api/v1/expenses/", methods=["GET"])
-def expenses_list_api_v1():
-    paid_parameter = request.args.get("paid")
-    if paid_parameter:
-        paid_filter = True if paid_parameter == 'true' else False
-        filtered = expenses.get_expenses_filtered_by_paid(paid_filter)
+@app.route("/api/v1/books/", methods=["GET"])
+def books_list_api_v1():
+    lent_parameter = request.args.get("lent")
+    if lent_parameter:
+        lent_filter = True if lent_parameter == 'true' else False
+        filtered = books.get_books_filtered_by_lent(lent_filter)
         return jsonify(filtered)
-    return jsonify(expenses.all())
+    return jsonify(books.all())
 
 
-@app.route("/api/v1/expenses/<int:expense_id>", methods=["GET"])
-def get_expense_api_v1(expense_id):
-    expense = expenses.get(expense_id)
-    if not expense:
+@app.route("/api/v1/books/<int:book_id>", methods=["GET"])
+def get_book_api_v1(book_id):
+    book = books.get(book_id)
+    if not book:
         abort(404)
-    return jsonify({"expense": expense})
+    return jsonify({"book": book})
 
 
-@app.route("/api/v1/expenses/", methods=["POST"])
-def create_expense_api_v1():
+@app.route("/api/v1/books/", methods=["POST"])
+def create_book_api_v1():
     if not request.json or not 'title' in request.json:
         abort(400)
-    expense = {
-        'id': expenses.all()[-1]['id'] + 1,
+    book = {
+        'id': books.all()[-1]['id'] + 1,
         'title': request.json['title'],
-        'description': request.json.get('description', ""),
-        'paid': False
+        'author': request.json.get('author', ""),
+        'lent': False
     }
-    expenses.create(expense)
-    return jsonify({'expense': expense}), 201
+    books.create(book)
+    return jsonify({'book': book}), 201
 
 
-@app.route("/api/v1/expenses/<int:expense_id>", methods=['DELETE'])
-def delete_expense_api_v1(expense_id):
-    result = expenses.delete(expense_id)
+@app.route("/api/v1/books/<int:book_id>", methods=['DELETE'])
+def delete_book_api_v1(book_id):
+    result = books.delete(book_id)
     if not result:
         abort(404)
     return jsonify({'result': result})
 
 
-@app.route("/api/v1/expenses/<int:expense_id>", methods=["PUT"])
-def update_expense_api_v1(expense_id):
-    expense = expenses.get(expense_id)
-    if not expense:
+@app.route("/api/v1/books/<int:book_id>", methods=["PUT"])
+def update_book_api_v1(book_id):
+    book = books.get(book_id)
+    if not book:
         abort(404)
     if not request.json:
         abort(400)
     data = request.json
     if any([
         'title' in data and not isinstance(data.get('title'), str),
-        'description' in data and not isinstance(data.get('description'), str),
-        'paid' in data and not isinstance(data.get('paid'), bool)
+        'author' in data and not isinstance(data.get('author'), str),
+        'lent' in data and not isinstance(data.get('lent'), bool)
     ]):
         abort(400)
-    expense = {
-        'title': data.get('title', expense['title']),
-        'description': data.get('description', expense['description']),
-        'paid': data.get('paid', expense['paid'])
+    book = {
+        'title': data.get('title', book['title']),
+        'author': data.get('author', book['author']),
+        'lent': data.get('lent', book['lent'])
     }
-    expenses.update(expense_id, expense)
-    return jsonify({'expense': expense})
+    books.update(book_id, book)
+    return jsonify({'book': book})
 
 
 @app.errorhandler(404)
@@ -78,41 +78,41 @@ def bad_request(error):
     return make_response(jsonify({'error': 'Bad request', 'status_code': 400}), 400)
 
 
-@app.route("/expenses/", methods=["GET", "POST"])
-def expenses_list():
-    form = ExpenseForm()
+@app.route("/books/", methods=["GET", "POST"])
+def books_list():
+    form = BookForm()
     error = ""
     if request.method == "POST" and form.validate_on_submit():
         form.data.pop('csrf_token')
-        expenses.create(form.data)
-        expenses.save_all()
-        return redirect(url_for("expenses_list"))
+        books.create(form.data)
+        books.save_all()
+        return redirect(url_for("books_list"))
 
-    return render_template("expenses.html", 
+    return render_template("books.html", 
                            form=form, 
-                           expenses=expenses.all(), 
+                           books=books.all(), 
                            error=error)
     
 
-@app.route("/expenses/<int:expense_id>/", methods=["GET", "POST"])
-def expense_details(expense_id):
-    expense = expenses.get(expense_id)
-    form = ExpenseForm(data=expense)
+@app.route("/books/<int:book_id>/", methods=["GET", "POST"])
+def book_details(book_id):
+    book = books.get(book_id)
+    form = BookForm(data=book)
 
     if request.method == "POST":
         if form.validate_on_submit():
-            expense = {
-            'id': expense_id,
+            book = {
+            'id': book_id,
             'title': form.data['title'],
-            'description': form.data['description'],
-            'paid': form.data['paid']
+            'author': form.data['author'],
+            'lent': form.data['lent']
         }
             form.data.pop('csrf_token')
-            expenses.update(expense_id, form.data)
-        return redirect(url_for("expenses_list"))
-    return render_template("expense.html", 
+            books.update(book_id, form.data)
+        return redirect(url_for("books_list"))
+    return render_template("book.html", 
                            form=form, 
-                           expense_id=expense_id)
+                           book_id=book_id)
 
 
 if __name__ == "__main__":
