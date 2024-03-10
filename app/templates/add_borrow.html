@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div>
+    <h2>Book Borrow form:</h2>
+    <form method="POST" action="/addborrow/{{ book_id }}">
+        {{ form.hidden_tag() }}
+        <table>
+            {% for field in form if field.widget.input_type != 'hidden' %}
+                <tr>
+                    <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                    <td>{{ field }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="hidden" name="book_id" value="{{ book_id }}">
+        <button type="submit">Borrow this Book</button>
+    </form>
+</div>
+
+{% endblock %}

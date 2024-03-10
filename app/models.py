@@ -17,7 +17,8 @@ class Book(db.Model):
     date = db.Column(db.String(100), index=True, default=datetime.utcnow)
     comment = db.Column(db.String(100), index=True)
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
-
+    borrows = db.relationship("Borrow", backref="book", lazy="dynamic")
+    
     def __str__(self):
         return f"<Book {self.id} {self.title}>"
 

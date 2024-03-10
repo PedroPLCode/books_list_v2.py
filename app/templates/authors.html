@@ -18,7 +18,7 @@
         <tr>
             <td>{{ author.name }}</a></td>
             <td>{{ author.comment }}</td>
-            <td>{{ author.id }}</td>
+            <td><a href="/addbook/{{ loop.index }}">Add Book</a></td>
         </tr>
         {% endfor %}
     </table>

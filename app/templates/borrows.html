@@ -9,8 +9,8 @@
     </div>
     <table>
         <thead>
+        <th>Book</th>
         <th>Borrower</th>
-        <th>Comment</th>
         <th>Borrow Date</th>
         <th>Return Date</th>
         <th>Comment</th>
@@ -18,29 +18,15 @@
         </thead>
         {% for borrow in borrows %}
         <tr>
-            <td>{{ borrow.borower }}</a></td>
-            <td>{{ borrow.id }}</td>
+            <td>{{ borrow.book.title }}</a></td>
+            <td>{{ borrow.borrower }}</td>
             <td>{{ borrow.borrow_date }}</td>
             <td>{{ borrow.return_date }}</td>
             <td>{{ borrow.coment }}</td>
+            <td>del soon..</td>
         </tr>
         {% endfor %}
     </table>
-    <div>
-        <h2>Book Add form:</h2>
-        <form method="POST" action="/borrows">
-            {{ form.hidden_tag() }}
-            <table>
-                {% for field in form if field.widget.input_type != 'hidden' %}
-                    <tr>
-                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
-                        <td>{{ field }}</td>
-                    </tr>
-                {% endfor %}
-            </table>
-            <input type="submit" value="Add Borrow">
-        </form>
-    </div>
 </div>
 
 {% endblock %}

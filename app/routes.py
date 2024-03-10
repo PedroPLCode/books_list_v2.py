@@ -22,7 +22,7 @@ def create_fake_data():
 
 
 def create_fake_data_n_times(n):
-    for i in range(1, n):
+    for i in range(0, n):
         create_fake_data()
         
 
@@ -47,22 +47,56 @@ def authors_view():
 
         return redirect(url_for("authors_view"))
 
-    return render_template("authors.html", authors=authors, form=form)
+    return render_template("authors.html", authors=authors, form=form, error=error)
 
 
 @app.route('/books', methods=["GET", "POST"])
 def books_view():
-    form=BookForm()
     error = ""
     books = Book.query.all()
+    return render_template("books.html", books=books, error=error)
 
-    return render_template("books.html", books=books, form=form)
+
+@app.route('/addbook/<int:author_id>', methods=["GET", "POST"])
+def add_book_view(author_id):
+    form=BookForm()
+    error = ""
+    
+    if request.method == "POST" and form.validate_on_submit():
+        author_id = request.form.get('author_id')
+        form.data.pop('csrf_token')
+        new_book = Book(title=form.data['title'], comment=form.data['comment'], author_id=author_id)
+        db.session.add(new_book)
+        db.session.commit()
+        books = Book.query.all()
+        return render_template("books.html", books=books, form=form, error=error)
+    
+    return render_template("add_book.html", form=form, error=error, author_id=author_id)
 
 
 @app.route('/borrows', methods=["GET", "POST"])
 def borrows_view():
-    form=BorrowForm()
     error = ""
     borrows = Borrow.query.all()
+    return render_template("borrows.html", borrows=borrows, error=error)
 
-    return render_template("borrows.html", borrows=borrows, form=form, error=error)
+
+@app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
+def add_borrow_view(book_id):
+    form=BorrowForm()
+    error = ""
+    
+    if request.method == "POST" and form.validate_on_submit():
+        book_id = request.form.get('book_id')
+        form.data.pop('csrf_token')
+        new_borrow = Borrow(borrower=form.data['borrower'], 
+                            borrow_date=form.data['borrow_date'], 
+                            return_date=form.data['return_date'], 
+                            comment=form.data['comment'], 
+                            book_id=book_id)
+        db.session.add(new_borrow)
+        db.session.commit()
+        borrows = Borrow.query.all()
+        return render_template("borrows.html", borrows=borrows, form=form, error=error)
+    
+    return render_template("add_borrow.html", form=form, error=error, book_id=book_id)
