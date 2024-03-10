@@ -18,7 +18,9 @@
         <tr>
             <td>{{ author.name }}</a></td>
             <td>{{ author.comment }}</td>
-            <td><a href="/addbook/{{ loop.index }}">Add Book</a></td>
+            <td><a href="/addbook/{{ loop.index }}">Add Book</a>
+                <a href="/removeauthor/{{ author.id }}">Remove This Author</a>
+            </td>
         </tr>
         {% endfor %}
     </table>

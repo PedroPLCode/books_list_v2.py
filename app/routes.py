@@ -50,6 +50,17 @@ def authors_view():
     return render_template("authors.html", authors=authors, form=form, error=error)
 
 
+@app.route('/removebook/<int:author_id>', methods=["GET"])
+def remove_author(author_id):
+    authors = Author.query.all()
+    for author in authors:
+        if author.id  == int(author_id):
+            db.session.delete(author)
+            db.session.commit()
+            break
+    return redirect(url_for("authors_view"))
+
+
 @app.route('/books', methods=["GET"])
 def books_view():
     error = ""
@@ -72,6 +83,17 @@ def add_book_view(author_id):
         return render_template("books.html", books=books, form=form, error=error)
     
     return render_template("add_book.html", form=form, error=error, author_id=author_id)
+
+
+@app.route('/removebook/<int:book_id>', methods=["GET"])
+def remove_book(book_id):
+    books = Book.query.all()
+    for book in books:
+        if book.id  == int(book_id):
+            db.session.delete(book)
+            db.session.commit()
+            break
+    return redirect(url_for("books_view"))
 
 
 @app.route('/borrows', methods=["GET"])
@@ -102,11 +124,10 @@ def manage_borrow_view(book_id):
 
 
 @app.route('/removeborrow/<int:borrow_id>', methods=["GET"])
-def remove(borrow_id):
+def remove_borrow(borrow_id):
     borrows = Borrow.query.all()
     for borrow in borrows:
-        print(borrow.id, int(borrow_id))
-        if int(borrow.id)  == int(borrow_id):
+        if borrow.id == int(borrow_id):
             db.session.delete(borrow)
             db.session.commit()
             break

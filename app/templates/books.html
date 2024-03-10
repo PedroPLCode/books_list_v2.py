@@ -21,7 +21,9 @@
             <td>{{ book.author.name }}</td>
             <td>{{ book.date }}</td>
             <td>{{ book.comment }}</td>
-            <td><a href="/addborrow/{{ loop.index }}">Borrow This Book</a></td>
+            <td><a href="/addborrow/{{ loop.index }}">Borrow This Book</a>
+                <a href="/removebook/{{ book.id }}">Remove This Borrow</a>
+            </td>
         </tr>
         {% endfor %}
     </table>
