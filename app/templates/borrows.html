@@ -7,14 +7,40 @@
        <h1 class="mt-5">Books List v2</h1>
        <p class="lead">Borrows List</p>
     </div>
-    {% for borrow in borrows %}
-
-    <p>Id: {{ borrow.id }}</p>
-    <h4>Borrower: {{ borrow.borrower }}</h4>
-    <h5>Borrow date: {{ borrow.borrow_date }}</h5>
-    <h5>Return date: {{ borrow.return_date }}</h5>
-    
-    {% endfor %}
+    <table>
+        <thead>
+        <th>Borrower</th>
+        <th>Comment</th>
+        <th>Borrow Date</th>
+        <th>Return Date</th>
+        <th>Comment</th>
+        <th>Action</th>
+        </thead>
+        {% for borrow in borrows %}
+        <tr>
+            <td>{{ borrow.borower }}</a></td>
+            <td>{{ borrow.id }}</td>
+            <td>{{ borrow.borrow_date }}</td>
+            <td>{{ borrow.return_date }}</td>
+            <td>{{ borrow.coment }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <h2>Book Add form:</h2>
+        <form method="POST" action="/borrows">
+            {{ form.hidden_tag() }}
+            <table>
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                    <tr>
+                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                        <td>{{ field }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Add Borrow">
+        </form>
+    </div>
 </div>
 
 {% endblock %}

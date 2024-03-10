@@ -1,6 +1,8 @@
 from app import app, db
 from app.models import Author, Book, Borrow
 
+app.config["SECRET_KEY"] = "sratatata"
+
 @app.shell_context_processor
 def make_shell_context():
     return {

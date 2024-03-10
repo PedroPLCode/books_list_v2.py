@@ -3,7 +3,7 @@ from wtforms import StringField, TextAreaField, BooleanField
 from wtforms.validators import DataRequired, Email
 
 class AuthorForm(FlaskForm):
-    name = StringField('Author', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[DataRequired()])
 
 class BookForm(FlaskForm):

@@ -7,12 +7,37 @@
        <h1 class="mt-5">Books List v2</h1>
        <p class="lead">Authors List</p>
     </div>
-    {% for author in authors %}
-    
-    <p>Id: {{ author.id}}</p> 
-    <h4>Name: {{ author.name }}</h4>
-    
-    {% endfor %}
+
+    <table>
+        <thead>
+        <th>Name</th>
+        <th>Comment</th>
+        <th>Action</th>
+        </thead>
+        {% for author in authors %}
+        <tr>
+            <td>{{ author.name }}</a></td>
+            <td>{{ author.comment }}</td>
+            <td>{{ author.id }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        <h2>Author Add form:</h2>
+        <form method="POST" action="/authors">
+            {{ form.hidden_tag() }}
+            <table>
+                {% for field in form if field.widget.input_type != 'hidden' %}
+                    <tr>
+                        <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
+                        <td>{{ field }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <input type="submit" value="Add Author">
+        </form>
+    </div>
+
 </div>
 
 {% endblock %}
