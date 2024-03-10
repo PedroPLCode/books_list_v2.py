@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12 text-center">
+       <h1 class="mt-5">Books List v2</h1>
+       <p class="lead">Borrows List</p>
+    </div>
+    {% for borrow in borrows %}
+
+    <p>Id: {{ borrow.id }}</p>
+    <h4>Borrower: {{ borrow.borrower }}</h4>
+    <h5>Borrow date: {{ borrow.borrow_date }}</h5>
+    <h5>Return date: {{ borrow.return_date }}</h5>
+    
+    {% endfor %}
+</div>
+
+{% endblock %}

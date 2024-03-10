@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-12 text-center">
+       <h1 class="mt-5">Books List v2</h1>
+       <p class="lead">Authors List</p>
+    </div>
+    {% for author in authors %}
+    
+    <p>Id: {{ author.id}}</p> 
+    <h4>Name: {{ author.name }}</h4>
+    
+    {% endfor %}
+</div>
+
+{% endblock %}
