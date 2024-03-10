@@ -22,8 +22,8 @@
             <td>{{ borrow.borrower }}</td>
             <td>{{ borrow.borrow_date }}</td>
             <td>{{ borrow.return_date }}</td>
-            <td>{{ borrow.coment }}</td>
-            <td>del soon..</td>
+            <td>{{ borrow.comment }}</td>
+            <td><a href="/removeborrow/{{ borrow.id }}">End This Borrow</a></td>
         </tr>
         {% endfor %}
     </table>

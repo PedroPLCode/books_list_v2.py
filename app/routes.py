@@ -50,7 +50,7 @@ def authors_view():
     return render_template("authors.html", authors=authors, form=form, error=error)
 
 
-@app.route('/books', methods=["GET", "POST"])
+@app.route('/books', methods=["GET"])
 def books_view():
     error = ""
     books = Book.query.all()
@@ -74,7 +74,7 @@ def add_book_view(author_id):
     return render_template("add_book.html", form=form, error=error, author_id=author_id)
 
 
-@app.route('/borrows', methods=["GET", "POST"])
+@app.route('/borrows', methods=["GET"])
 def borrows_view():
     error = ""
     borrows = Borrow.query.all()
@@ -82,7 +82,7 @@ def borrows_view():
 
 
 @app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
-def add_borrow_view(book_id):
+def manage_borrow_view(book_id):
     form=BorrowForm()
     error = ""
     
@@ -90,7 +90,6 @@ def add_borrow_view(book_id):
         book_id = request.form.get('book_id')
         form.data.pop('csrf_token')
         new_borrow = Borrow(borrower=form.data['borrower'], 
-                            borrow_date=form.data['borrow_date'], 
                             return_date=form.data['return_date'], 
                             comment=form.data['comment'], 
                             book_id=book_id)
@@ -100,3 +99,16 @@ def add_borrow_view(book_id):
         return render_template("borrows.html", borrows=borrows, form=form, error=error)
     
     return render_template("add_borrow.html", form=form, error=error, book_id=book_id)
+
+
+@app.route('/removeborrow/<int:borrow_id>', methods=["GET"])
+def remove(borrow_id):
+    borrows = Borrow.query.all()
+    for borrow in borrows:
+        print(borrow.id, int(borrow_id))
+        if int(borrow.id)  == int(borrow_id):
+            db.session.delete(borrow)
+            db.session.commit()
+            break
+    return redirect(url_for("borrows_view"))
+    

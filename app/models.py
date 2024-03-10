@@ -14,7 +14,7 @@ class Author(db.Model):
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), index=True)
-    date = db.Column(db.String(100), index=True, default=datetime.utcnow)
+    date = db.Column(db.String(100), index=True, default=datetime.today().strftime('%Y-%m-%d'))
     comment = db.Column(db.String(100), index=True)
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
     borrows = db.relationship("Borrow", backref="book", lazy="dynamic")
@@ -26,7 +26,7 @@ class Book(db.Model):
 class Borrow(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     borrower = db.Column(db.String(100), index=True)
-    borrow_date = db.Column(db.String(100), index=True, default=datetime.utcnow)
+    borrow_date = db.Column(db.String(100), index=True, default=datetime.today().strftime('%Y-%m-%d'))
     return_date = db.Column(db.String(100), index=True)
     comment = db.Column(db.String(100), index=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
