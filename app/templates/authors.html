@@ -2,12 +2,11 @@
 
 {% block content %}
 
-<div class="row">
+<div class="d-flex flex-column justify-content-center align-items-center">
     <div class="col-lg-12 text-center">
-       <h1 class="mt-5">Books List v2</h1>
-       <p class="lead">Authors List</p>
+        <h3 class="mt-5">Books List v2</h3>
+        <h2>Authors List</h2>
     </div>
-
     <table>
         <thead>
         <th>Name</th>
@@ -18,15 +17,16 @@
         <tr>
             <td>{{ author.name }}</a></td>
             <td>{{ author.comment }}</td>
-            <td><a href="/addbook/{{ loop.index }}">Add Book</a>
+            <td class="d-flex flex-column justify-content-center align-items-center">
+                <a href="/addbook/{{ loop.index }}">Add Author's Book</a>
                 <a href="/removeauthor/{{ author.id }}">Remove This Author</a>
             </td>
         </tr>
         {% endfor %}
     </table>
-    <div>
-        <h2>Author Add form:</h2>
-        <form method="POST" action="/authors">
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h2 class="mt-5">Author Add form:</h2>
+        <form class="d-flex flex-column justify-content-center align-items-center mb-5" method="POST" action="/authors">
             {{ form.hidden_tag() }}
             <table>
                 {% for field in form if field.widget.input_type != 'hidden' %}
@@ -39,7 +39,6 @@
             <input type="submit" value="Add Author">
         </form>
     </div>
-
 </div>
 
 {% endblock %}

@@ -21,3 +21,8 @@ run app:
 ```shell
 flask run
 ```
+
+## Main Page: /
+## Authors Page: /authors
+## Books Page: /books
+## Borrows Page: /borrows

@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<div class="row">
+<div class="d-flex flex-column justify-content-center align-items-center">
     <div class="col-lg-12 text-center">
-       <h1 class="mt-5">Books List v2</h1>
-       <p class="lead">Borrows List</p>
+       <h3 class="mt-5">Books List v2</h3>
+       <h2>Borrows List</h2>
     </div>
-    <table>
+    <table class="mb-5">
         <thead>
         <th>Book</th>
         <th>Borrower</th>
@@ -23,7 +23,7 @@
             <td>{{ borrow.borrow_date }}</td>
             <td>{{ borrow.return_date }}</td>
             <td>{{ borrow.comment }}</td>
-            <td><a href="/removeborrow/{{ borrow.id }}">End This Borrow</a></td>
+            <td><a href="/removeborrow/{{ borrow.id }}">Remove This Borrow</a></td>
         </tr>
         {% endfor %}
     </table>

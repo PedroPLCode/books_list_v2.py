@@ -5,7 +5,7 @@ class Author(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), index=True, unique=True)
     comment = db.Column(db.String(100), index=True)
-    books = db.relationship("Book", backref="author", lazy="dynamic")
+    books = db.relationship("Book", backref="author")
 
     def __str__(self):
         return f"<User {self.name}>"
@@ -17,7 +17,7 @@ class Book(db.Model):
     date = db.Column(db.String(100), index=True, default=datetime.today().strftime('%Y-%m-%d'))
     comment = db.Column(db.String(100), index=True)
     author_id = db.Column(db.Integer, db.ForeignKey('author.id'))
-    borrows = db.relationship("Borrow", backref="book", lazy="dynamic")
+    borrows = db.relationship("Borrow", back_populates="book")
     
     def __str__(self):
         return f"<Book {self.id} {self.title}>"
@@ -30,6 +30,7 @@ class Borrow(db.Model):
     return_date = db.Column(db.String(100), index=True)
     comment = db.Column(db.String(100), index=True)
     book_id = db.Column(db.Integer, db.ForeignKey('book.id'))
+    book = db.relationship("Book", back_populates="borrows")
 
     def __str__(self):
         return f"<Borrow {self.id} {self.borrower}>"

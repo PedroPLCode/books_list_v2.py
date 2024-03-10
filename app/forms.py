@@ -6,9 +6,11 @@ class AuthorForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[DataRequired()])
 
+
 class BookForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     comment = TextAreaField('Comment', validators=[DataRequired()])
+    
     
 class BorrowForm(FlaskForm):
     borrower = StringField('Borrower', validators=[DataRequired()])

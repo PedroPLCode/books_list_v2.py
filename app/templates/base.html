@@ -8,7 +8,6 @@
         <title>Bare - Start Bootstrap Template</title>
         <style>
             table, th, tr, td {border: 1px solid black;}
-            a {border: 1px solid red;}
         </style>
         <!-- Core theme CSS (includes Bootstrap)-->
         <!-- Bootstrap core CSS -->
@@ -29,19 +28,7 @@
             </div>
         </nav>
         <!-- Page Content -->
-        <div class="container">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                    <div class="alert alert-info mt-3" role="alert">
-                        {{ message }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endfor %}
-                {% endif %}
-                {% endwith %}
+        <div class="container d-flex flex-column justify-content-center align-items-center">
             {% block content %}
             {% endblock %}
         </div>

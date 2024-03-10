@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<div class="row">
+<div class="d-flex flex-column justify-content-center align-items-center">
     <div class="col-lg-12 text-center">
-       <h1 class="mt-5">Books List v2</h1>
-       <p class="lead">Books List</p>
+        <h3 class="mt-5">Books List v2</h3>
+        <h2>Books List</h2>
     </div>
-    <table>
+    <table class="mb-5">
         <thead>
         <th>Title</th>
         <th>Author</th>
@@ -21,8 +21,9 @@
             <td>{{ book.author.name }}</td>
             <td>{{ book.date }}</td>
             <td>{{ book.comment }}</td>
-            <td><a href="/addborrow/{{ loop.index }}">Borrow This Book</a>
-                <a href="/removebook/{{ book.id }}">Remove This Borrow</a>
+            <td class="d-flex flex-column justify-content-center align-items-center">
+                <a href="/addborrow/{{ loop.index }}">Borrow This Book</a>
+                <a href="/removebook/{{ book.id }}">Remove This Book</a>
             </td>
         </tr>
         {% endfor %}
