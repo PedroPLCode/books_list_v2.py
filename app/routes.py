@@ -38,16 +38,19 @@ def remove_author(author_id):
 @app.route('/books/', methods=["GET"])
 def books_view():
     author_name = request.args.get('author')
+    search_query = request.args.get('search')
+    author = None
     if author_name:
         author = Author.query.filter_by(name=author_name).first()
         if author:
             books = Book.query.filter_by(author_id=author.id).all()
         else:
             books = []
+    elif search_query:
+        books = Book.query.filter(Book.title.ilike(f"%{search_query}%")).all()
     else:
         books = Book.query.all()
-        author = None
-    return render_template("books.html", author=author, books=books)
+    return render_template("books.html", author=author, search=search_query, books=books)
 
 
 @app.route('/addbook/<int:author_id>', methods=["GET", "POST"])
