@@ -6,6 +6,9 @@
     <div class="col-lg-12 text-center">
        <h3 class="mt-5">Books List v2</h3>
        <h2>Borrows List</h2>
+       {% if borrower %}
+       <h3>Filtered by Borrower: {{ borrower }}</h3>    
+   {% endif %}
     </div>
     <table class="mb-5">
         <thead>
@@ -19,7 +22,7 @@
         {% for borrow in borrows %}
         <tr>
             <td>{{ borrow.book.title }}</a></td>
-            <td>{{ borrow.borrower }}</td>
+            <td><a href="/borrows/?borrower={{ borrow.borrower }}">{{ borrow.borrower }}</a></td>
             <td>{{ borrow.borrow_date }}</td>
             <td>{{ borrow.return_date }}</td>
             <td>{{ borrow.comment }}</td>

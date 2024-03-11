@@ -38,7 +38,6 @@ def remove_author(author_id):
 @app.route('/books/', methods=["GET"])
 def books_view():
     author_name = request.args.get('author')
-    
     if author_name:
         author = Author.query.filter_by(name=author_name).first()
         if author:
@@ -48,7 +47,6 @@ def books_view():
     else:
         books = Book.query.all()
         author = None
-        
     return render_template("books.html", author=author, books=books)
 
 
@@ -82,9 +80,13 @@ def remove_book(book_id):
 
 @app.route('/borrows/', methods=["GET"])
 def borrows_view():
-    borrows = Borrow.query.all()
-    return render_template("borrows.html", 
-                           borrows=borrows)
+    borrower_name = request.args.get('borrower')
+    if borrower_name:
+        borrows = Borrow.query.filter_by(borrower=borrower_name).all()
+    else:
+        borrows = Borrow.query.all()
+        borrower_name = None
+    return render_template("borrows.html", borrower=borrower_name, borrows=borrows)
 
 
 @app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
