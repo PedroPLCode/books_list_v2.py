@@ -10,8 +10,15 @@ def home_page_view():
 
 @app.route('/authors/', methods=["GET", "POST"])
 def authors_view():
+    search_query = request.args.get('search')
     form=AuthorForm()
-    authors = Author.query.all()
+    
+    if search_query:
+        authors = Author.query.filter(Author.name.ilike(f"%{search_query}%")).all()
+    else:
+        authors = Author.query.all()
+        search_query = None
+        
     if request.method == "POST" and form.validate_on_submit():
         form.data.pop('csrf_token')
         new_author = Author(name=form.data['name'], 
@@ -21,6 +28,7 @@ def authors_view():
         return redirect(url_for("authors_view"))
     return render_template("authors.html", 
                            authors=authors, 
+                           search=search_query,
                            form=form)
 
 

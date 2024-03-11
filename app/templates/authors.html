@@ -6,6 +6,13 @@
     <div class="col-lg-12 text-center">
         <h3 class="mt-5">Books List v2</h3>
         <h2>Authors List</h2>
+        <form class="form-inline" action="/authors/" method="GET">
+            <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search books" aria-label="Search books" name="search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        {% if search %}
+        <h3>Filtered by: {{ search }}</h3>    
+        {% endif %}
     </div>
     <table>
         <thead>
