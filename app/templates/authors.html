@@ -15,7 +15,7 @@
         </thead>
         {% for author in authors %}
         <tr>
-            <td>{{ author.name }}</a></td>
+            <td><a href="/books/?author={{ author.name }}">{{ author.name }}</a></td>
             <td>{{ author.comment }}</td>
             <td class="d-flex flex-column justify-content-center align-items-center">
                 <a href="/addbook/{{ loop.index }}">Add Author's Book</a>

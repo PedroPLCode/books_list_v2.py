@@ -8,7 +8,7 @@ def home_page_view():
     return render_template("home_page.html")
 
 
-@app.route('/authors', methods=["GET", "POST"])
+@app.route('/authors/', methods=["GET", "POST"])
 def authors_view():
     form=AuthorForm()
     authors = Author.query.all()
@@ -35,10 +35,21 @@ def remove_author(author_id):
     return redirect(url_for("authors_view"))
 
 
-@app.route('/books', methods=["GET"])
+@app.route('/books/', methods=["GET"])
 def books_view():
-    books = Book.query.all()
-    return render_template("books.html", books=books)
+    author_name = request.args.get('author')
+    
+    if author_name:
+        author = Author.query.filter_by(name=author_name).first()
+        if author:
+            books = Book.query.filter_by(author_id=author.id).all()
+        else:
+            books = []
+    else:
+        books = Book.query.all()
+        author = None
+        
+    return render_template("books.html", author=author, books=books)
 
 
 @app.route('/addbook/<int:author_id>', methods=["GET", "POST"])
@@ -69,7 +80,7 @@ def remove_book(book_id):
     return redirect(url_for("books_view"))
 
 
-@app.route('/borrows', methods=["GET"])
+@app.route('/borrows/', methods=["GET"])
 def borrows_view():
     borrows = Borrow.query.all()
     return render_template("borrows.html", 
