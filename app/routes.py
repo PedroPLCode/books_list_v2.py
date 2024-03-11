@@ -12,13 +12,11 @@ def home_page_view():
 def authors_view():
     search_query = request.args.get('search')
     form=AuthorForm()
-    
     if search_query:
         authors = Author.query.filter(Author.name.ilike(f"%{search_query}%")).all()
     else:
         authors = Author.query.all()
         search_query = None
-        
     if request.method == "POST" and form.validate_on_submit():
         form.data.pop('csrf_token')
         new_author = Author(name=form.data['name'], 
@@ -92,12 +90,18 @@ def remove_book(book_id):
 @app.route('/borrows/', methods=["GET"])
 def borrows_view():
     borrower_name = request.args.get('borrower')
+    search_query = request.args.get('search')
     if borrower_name:
         borrows = Borrow.query.filter_by(borrower=borrower_name).all()
+        search_query = None
+    elif search_query:
+        borrows = Borrow.query.filter(Borrow.borrower.ilike(f"%{search_query}%")).all()
+        borrower_name = None
     else:
         borrows = Borrow.query.all()
         borrower_name = None
-    return render_template("borrows.html", borrower=borrower_name, borrows=borrows)
+        search_query = None
+    return render_template("borrows.html", borrower=borrower_name, search=search_query, borrows=borrows)
 
 
 @app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
