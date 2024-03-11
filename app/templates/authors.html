@@ -14,6 +14,7 @@
         <h3>Filtered by: {{ search }}</h3>    
         {% endif %}
     </div>
+    {% if authors %}
     <table>
         <thead>
         <th>Name</th>
@@ -30,6 +31,9 @@
             </td>
         </tr>
         {% endfor %}
+    {% else %}
+        <h3>Nothing was found.</h3>
+    {% endif %}
     </table>
     <div class="d-flex flex-column justify-content-center align-items-center">
         <h2 class="mt-5">Author Add form:</h2>

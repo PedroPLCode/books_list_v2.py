@@ -17,6 +17,7 @@
         <h3>Filtered by: {{ search }}</h3>    
         {% endif %}
     </div>
+    {% if books %}
     <table class="mb-5">
         <thead>
         <th>Title</th>
@@ -37,6 +38,9 @@
             </td>
         </tr>
         {% endfor %}
+    {% else %}
+        <h3>Nothing was found.</h3>
+    {% endif %}
     </table>
 </div>
 

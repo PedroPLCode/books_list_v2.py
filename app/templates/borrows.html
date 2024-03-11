@@ -17,6 +17,7 @@
         <h3>Filtered by: {{ search }}</h3>    
         {% endif %}
     </div>
+    {% if borrows %}
     <table class="mb-5">
         <thead>
         <th>Book</th>
@@ -36,6 +37,9 @@
             <td><a href="/removeborrow/{{ borrow.id }}">Remove This Borrow</a></td>
         </tr>
         {% endfor %}
+    {% else %}
+        <h3>Nothing was found.</h3>
+    {% endif %}
     </table>
 </div>
 
