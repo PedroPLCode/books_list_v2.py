@@ -71,8 +71,10 @@ def add_book_view(author_id):
         db.session.add(new_book)
         db.session.commit()
         return redirect(url_for("books_view"))
+    author = Author.query.filter_by(id=author_id).first()
     return render_template("add_book.html", 
-                           form=form, 
+                           form=form,
+                           author_name=author.name,
                            author_id=author_id)
 
 
@@ -117,8 +119,10 @@ def add_borrow_view(book_id):
         db.session.add(new_borrow)
         db.session.commit()
         return redirect(url_for("borrows_view"))
+    book = Book.query.filter_by(id=book_id).first()
     return render_template("add_borrow.html", 
                            form=form, 
+                           book_title=book.title,
                            book_id=book_id)
 
 

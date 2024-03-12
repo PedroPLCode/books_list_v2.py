@@ -3,7 +3,8 @@
 {% block content %}
 
 <div>
-    <h2>Book Borrow form:</h2>
+    <h2>Book Borrow form</h2>
+    <h2>Book to borrow {{ book_title }}</h2>
     <form method="POST" action="/addborrow/{{ book_id }}">
         {{ form.hidden_tag() }}
         <table>
