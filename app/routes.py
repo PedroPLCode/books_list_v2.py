@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from app.models import Author, Book, Borrow
 from app.forms import AuthorForm, BookForm, BorrowForm
@@ -23,6 +23,7 @@ def authors_view():
                             comment=form.data['comment'])
         db.session.add(new_author)
         db.session.commit()
+        flash(f'Author {new_author.name.title()} added to database.')
         return redirect(url_for("authors_view"))
     return render_template("authors.html", 
                            authors=authors, 
@@ -37,6 +38,7 @@ def remove_author(author_id):
         if author.id  == int(author_id):
             db.session.delete(author)
             db.session.commit()
+            flash(f'Author {author.name.title()} removed from database.')
             break
     return redirect(url_for("authors_view"))
 
@@ -70,6 +72,7 @@ def add_book_view(author_id):
                         author_id=author_id)
         db.session.add(new_book)
         db.session.commit()
+        flash(f'Book {new_book.title.title()} added to database.')
         return redirect(url_for("books_view"))
     author = Author.query.filter_by(id=author_id).first()
     return render_template("add_book.html", 
@@ -85,6 +88,7 @@ def remove_book(book_id):
         if book.id  == int(book_id):
             db.session.delete(book)
             db.session.commit()
+            flash(f'Book {book.title.title()} removed from database.')
             break
     return redirect(url_for("books_view"))
 
@@ -118,6 +122,7 @@ def add_borrow_view(book_id):
                             book_id=book_id)
         db.session.add(new_borrow)
         db.session.commit()
+        flash(f'New borrow to {new_borrow.borrower.title()} reqistered.')
         return redirect(url_for("borrows_view"))
     book = Book.query.filter_by(id=book_id).first()
     return render_template("add_borrow.html", 
@@ -131,6 +136,7 @@ def remove_borrow(borrow_id):
     borrows = Borrow.query.all()
     for borrow in borrows:
         if borrow.id == int(borrow_id):
+            flash(f'{borrow.borrower.title()}s borrow of book {borrow.book.title} ended.')
             db.session.delete(borrow)
             db.session.commit()
             break

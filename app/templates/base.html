@@ -29,6 +29,15 @@
         </nav>
         <!-- Page Content -->
         <div class="container d-flex flex-column justify-content-center align-items-center">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-info mt-3" role="alert">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
             {% block content %}
             {% endblock %}
         </div>

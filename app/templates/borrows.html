@@ -6,7 +6,7 @@
     <div class="col-lg-12 text-center d-flex flex-column justify-content-center align-items-center">
         <h3 class="mt-5">Books List v2</h3>
         <h2>Borrows List</h2>
-        <form class="form-inline" action="/borrows/" method="GET">
+        <form class="form-inline mb-3" action="/borrows/" method="GET">
             <input class="form-control mr-sm-2" type="text" value="{% if search_query %}{{ search_query }}{% endif %}" placeholder="Search borrower" aria-label="Search borrower" name="search">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
