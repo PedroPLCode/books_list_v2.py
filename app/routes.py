@@ -1,7 +1,8 @@
 from flask import render_template, request, redirect, url_for, flash
 from app import app, db
 from app.models import Author, Book, Borrow
-from app.forms import AuthorForm, BookForm, BorrowForm
+from app.forms import AuthorOnlyForm, BookOnlyForm, AuthorAndBookForm, BorrowOnlyForm, BorrowAndBookForm
+from app.utils import *
 
 @app.route('/')
 def home_page_view():
@@ -11,19 +12,14 @@ def home_page_view():
 @app.route('/authors/', methods=["GET", "POST"])
 def authors_view():
     search_query = request.args.get('search')
-    form=AuthorForm()
+    form = AuthorOnlyForm()
     if search_query:
         authors = Author.query.filter(Author.name.ilike(f"%{search_query}%")).all()
     else:
         authors = Author.query.all()
         search_query = None
     if request.method == "POST" and form.validate_on_submit():
-        form.data.pop('csrf_token')
-        new_author = Author(name=form.data['name'], 
-                            comment=form.data['comment'])
-        db.session.add(new_author)
-        db.session.commit()
-        flash(f'Author {new_author.name.title()} added to database.')
+        add_author(form)
         return redirect(url_for("authors_view"))
     return render_template("authors.html", 
                            authors=authors, 
@@ -45,6 +41,8 @@ def remove_author(author_id):
 
 @app.route('/books/', methods=["GET"])
 def books_view():
+    authors = Author.query.all()
+    form = AuthorAndBookForm(authors, extra_validators=[length_validator])
     author_name = request.args.get('author')
     search_query = request.args.get('search')
     author = None
@@ -58,27 +56,44 @@ def books_view():
         books = Book.query.filter(Book.title.ilike(f"%{search_query}%")).all()
     else:
         books = Book.query.all()
-    return render_template("books.html", author=author, search=search_query, books=books)
+    return render_template("books.html", 
+                           author=author, 
+                           form=form, 
+                           search=search_query, 
+                           books=books)
 
 
 @app.route('/addbook/<int:author_id>', methods=["GET", "POST"])
 def add_book_view(author_id):
-    form=BookForm()
+    form = BookOnlyForm()
+    
     if request.method == "POST" and form.validate_on_submit():
         author_id = request.form.get('author_id')
-        form.data.pop('csrf_token')
-        new_book = Book(title=form.data['title'], 
-                        comment=form.data['comment'], 
-                        author_id=author_id)
-        db.session.add(new_book)
-        db.session.commit()
-        flash(f'Book {new_book.title.title()} added to database.')
+        add_book(form, author_id)
         return redirect(url_for("books_view"))
+    
     author = Author.query.filter_by(id=author_id).first()
     return render_template("add_book.html", 
                            form=form,
                            author_name=author.name,
                            author_id=author_id)
+    
+    
+@app.route('/addbook/', methods=["POST"])
+def add_book_without_author_id_param():
+    authors = Author.query.all()
+    form = AuthorAndBookForm(authors, extra_validators=[length_validator])
+    author = Author.query.filter_by(name=form.data['author']).first()
+    
+    if author and form.validate():
+        author_id = author.id
+        add_book(form, author_id)
+    elif not author and form.validate():
+        add_author(form)
+        author = Author.query.filter_by(name=form.data['author']).first()
+        author_id = author.id
+        add_book(form, author_id)
+    return redirect(url_for("books_view"))
 
 
 @app.route('/removebook/<int:book_id>', methods=["GET"])
@@ -95,6 +110,8 @@ def remove_book(book_id):
 
 @app.route('/borrows/', methods=["GET"])
 def borrows_view():
+    books = Book.query.all()
+    form = BorrowAndBookForm(books)
     borrower_name = request.args.get('borrower')
     search_query = request.args.get('search')
     if borrower_name:
@@ -107,28 +124,36 @@ def borrows_view():
         borrows = Borrow.query.all()
         borrower_name = None
         search_query = None
-    return render_template("borrows.html", borrower=borrower_name, search=search_query, borrows=borrows)
+    return render_template("borrows.html", 
+                           form=form,
+                           borrower=borrower_name, 
+                           search=search_query, 
+                           borrows=borrows)
 
 
 @app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
 def add_borrow_view(book_id):
-    form=BorrowForm()
+    form = BorrowOnlyForm()
     if request.method == "POST" and form.validate_on_submit():
         book_id = request.form.get('book_id')
-        form.data.pop('csrf_token')
-        new_borrow = Borrow(borrower=form.data['borrower'], 
-                            return_date=form.data['return_date'], 
-                            comment=form.data['comment'], 
-                            book_id=book_id)
-        db.session.add(new_borrow)
-        db.session.commit()
-        flash(f'New borrow to {new_borrow.borrower.title()} reqistered.')
+        add_borrow(form, book_id)
         return redirect(url_for("borrows_view"))
     book = Book.query.filter_by(id=book_id).first()
     return render_template("add_borrow.html", 
                            form=form, 
                            book_title=book.title,
                            book_id=book_id)
+    
+    
+@app.route('/addborrow/', methods=["POST"])
+def add_borrow_without_book_id_param():
+    form = BorrowAndBookForm()
+    book = Book.query.filter_by(title=form.data['book']).first()
+    book_id = book.id
+    
+    if form.validate_on_submit():
+        add_borrow(form, book_id)
+        return redirect(url_for("borrows_view"))
 
 
 @app.route('/removeborrow/<int:borrow_id>', methods=["GET"])
