@@ -32,9 +32,9 @@ class CheckAndSetCustomAuthorFieldVisibility {
       }
     }
     if (customOptionSelected) {
-      this.dom.customAuthorField.style.display = settings.styles.block;
+      this.dom.customAuthorField.style.opacity = '1';
     } else {
-      this.dom.customAuthorField.style.display = settings.styles.none;
+      this.dom.customAuthorField.style.opacity = '.25';
     }
   };
 }
