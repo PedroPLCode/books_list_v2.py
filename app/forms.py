@@ -27,6 +27,7 @@ class AuthorAndBookForm(FlaskForm):
         self.authors_names = [author.name for author in authors]
         self.extra_validators = extra_validators
 
+
     def validate(self):
         if not super(AuthorAndBookForm, self).validate():
             return False
@@ -48,6 +49,7 @@ class AuthorAndBookForm(FlaskForm):
             return False
 
         return True
+
 
     def is_customauthor_selected(self):
         return self.author.data == 'custom'
