@@ -42,9 +42,9 @@ def remove_author(author_id):
 @app.route('/books/', methods=["GET"])
 def books_view():
     authors = Author.query.all()
-    form = AuthorAndBookForm(authors, extra_validators=[length_validator])
     author_name = request.args.get('author')
     search_query = request.args.get('search')
+    form = AuthorAndBookForm(authors, author=author_name, extra_validators=[length_validator])
     author = None
     if author_name:
         author = Author.query.filter_by(name=author_name).first()
@@ -59,7 +59,7 @@ def books_view():
     return render_template("books.html", 
                            author=author, 
                            form=form, 
-                           search=search_query, 
+                           search=search_query,
                            books=books)
 
 
@@ -147,7 +147,8 @@ def add_borrow_view(book_id):
     
 @app.route('/addborrow/', methods=["POST"])
 def add_borrow_without_book_id_param():
-    form = BorrowAndBookForm()
+    books = Book.query.all()
+    form = BorrowAndBookForm(books)
     book = Book.query.filter_by(title=form.data['book']).first()
     book_id = book.id
     
