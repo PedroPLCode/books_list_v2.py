@@ -1,3 +1,4 @@
-.customauthor {
+.customauthor, 
+.customborrower {
   transition: .5s opacity;
 }

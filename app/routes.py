@@ -4,6 +4,12 @@ from app.models import Author, Book, Borrow
 from app.forms import AuthorOnlyForm, BookOnlyForm, AuthorAndBookForm, BorrowOnlyForm, BorrowAndBookForm
 from app.utils import *
 
+@app.errorhandler(404)
+def handle_page_not_found(error):
+    flash(str(error), 'warning')
+    return redirect(url_for("home_page_view"))
+
+
 @app.route('/')
 def home_page_view():
     return render_template("home_page.html")
@@ -34,7 +40,7 @@ def remove_author(author_id):
         if author.id  == int(author_id):
             db.session.delete(author)
             db.session.commit()
-            flash(f'Author {author.name.title()} removed from database.')
+            flash(f'Author {author.name.title()} removed from database.', 'warning')
             break
     return redirect(url_for("authors_view"))
 
@@ -44,7 +50,7 @@ def books_view():
     authors = Author.query.all()
     author_name = request.args.get('author')
     search_query = request.args.get('search')
-    form = AuthorAndBookForm(authors, author=author_name, extra_validators=[length_validator])
+    form = AuthorAndBookForm(authors, author=author_name)
     author = None
     if author_name:
         author = Author.query.filter_by(name=author_name).first()
@@ -56,6 +62,7 @@ def books_view():
         books = Book.query.filter(Book.title.ilike(f"%{search_query}%")).all()
     else:
         books = Book.query.all()
+    
     return render_template("books.html", 
                            author=author, 
                            form=form, 
@@ -82,7 +89,7 @@ def add_book_view(author_id):
 @app.route('/addbook/', methods=["POST"])
 def add_book_without_author_id_param():
     authors = Author.query.all()
-    form = AuthorAndBookForm(authors, extra_validators=[length_validator])
+    form = AuthorAndBookForm(authors)
     author = Author.query.filter_by(name=form.data['author']).first()
     
     if author and form.validate():
@@ -103,7 +110,7 @@ def remove_book(book_id):
         if book.id  == int(book_id):
             db.session.delete(book)
             db.session.commit()
-            flash(f'Book {book.title.title()} removed from database.')
+            flash(f'Book {book.title.title()} removed from database.', 'warning')
             break
     return redirect(url_for("books_view"))
 
@@ -111,9 +118,11 @@ def remove_book(book_id):
 @app.route('/borrows/', methods=["GET"])
 def borrows_view():
     books = Book.query.all()
-    form = BorrowAndBookForm(books)
+    borrows = Borrow.query.all()
     borrower_name = request.args.get('borrower')
     search_query = request.args.get('search')
+    form = BorrowAndBookForm(books, borrows, borrower=borrower_name)
+
     if borrower_name:
         borrows = Borrow.query.filter_by(borrower=borrower_name).all()
         search_query = None
@@ -133,8 +142,9 @@ def borrows_view():
 
 @app.route('/addborrow/<int:book_id>', methods=["GET", "POST"])
 def add_borrow_view(book_id):
-    form = BorrowOnlyForm()
-    if request.method == "POST" and form.validate_on_submit():
+    borrows = Borrow.query.all()
+    form = BorrowOnlyForm(borrows)
+    if request.method == "POST" and form.validate():
         book_id = request.form.get('book_id')
         add_borrow(form, book_id)
         return redirect(url_for("borrows_view"))
@@ -148,11 +158,12 @@ def add_borrow_view(book_id):
 @app.route('/addborrow/', methods=["POST"])
 def add_borrow_without_book_id_param():
     books = Book.query.all()
-    form = BorrowAndBookForm(books)
+    borrows = Borrow.query.all()
+    form = BorrowAndBookForm(books, borrows)
     book = Book.query.filter_by(title=form.data['book']).first()
     book_id = book.id
     
-    if form.validate_on_submit():
+    if form.validate():
         add_borrow(form, book_id)
         return redirect(url_for("borrows_view"))
 
@@ -162,7 +173,8 @@ def remove_borrow(borrow_id):
     borrows = Borrow.query.all()
     for borrow in borrows:
         if borrow.id == int(borrow_id):
-            flash(f'{borrow.borrower.title()}s borrow of book {borrow.book.title} ended.')
+            book_title = borrow.book.title if borrow.book else "Unknown"
+            flash(f'{borrow.borrower.title()}s borrow of book {book_title} ended.', 'warning')
             db.session.delete(borrow)
             db.session.commit()
             break

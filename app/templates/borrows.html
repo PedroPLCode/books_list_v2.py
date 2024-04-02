@@ -29,7 +29,11 @@
         </thead>
         {% for borrow in borrows %}
         <tr>
-            <td>{{ borrow.book.title }}</a></td>
+            {% if borrow.book.title %}
+            <td>{{ borrow.book.title }}</td>
+            {% else %}
+            <td>unknown</a></td>
+            {% endif %}
             <td><a href="/borrows/?borrower={{ borrow.borrower }}">{{ borrow.borrower }}</a></td>
             <td>{{ borrow.borrow_date }}</td>
             <td>{{ borrow.return_date }}</td>
@@ -47,7 +51,7 @@
             {{ form.hidden_tag() }}
             <table class="mb-3">
                 {% for field in form if field.widget.input_type != 'hidden' %}
-                    <tr>
+                    <tr class={{ field.id }}>
                         <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
                         <td>{{ field }}</td>
                     </tr>

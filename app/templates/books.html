@@ -29,7 +29,11 @@
         {% for book in books %}
         <tr>
             <td>{{ book.title }}</a></td>
+            {% if book.author.name %}
             <td><a href="/books/?author={{ book.author.name }}">{{ book.author.name }}</a></td>
+            {% else %}
+            <td>unknown</a></td>
+            {% endif %}
             <td>{{ book.date }}</td>
             <td>{{ book.comment }}</td>
             <td class="d-flex flex-column justify-content-center align-items-center">

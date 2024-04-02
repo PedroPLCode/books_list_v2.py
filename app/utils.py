@@ -8,7 +8,7 @@ def add_author(form):
                             comment=form.data['comment'])
     db.session.add(new_author)
     db.session.commit()
-    flash(f'Author {new_author.name.title()} added to database.')
+    flash(f'Author {new_author.name.title()} added to database.', 'success')
         
 
 def add_book(form, author_id):
@@ -18,8 +18,7 @@ def add_book(form, author_id):
                     author_id=author_id)
     db.session.add(new_book)
     db.session.commit()
-    flash(f'Book {new_book.title.title()} added to database.')
-    
+    flash(f'Book {new_book.title.title()} added to database.', 'success')
     
 def add_borrow(form, book_id):
     form.data.pop('csrf_token')
@@ -29,8 +28,7 @@ def add_borrow(form, book_id):
                         book_id=book_id)
     db.session.add(new_borrow)
     db.session.commit()
-    flash(f'New borrow to {new_borrow.borrower.title()} reqistered.')
-    
+    flash(f'New borrow to {new_borrow.borrower.title()} reqistered.', 'success')
     
 def length_validator(form):
     if len(form.title.data) < 3:

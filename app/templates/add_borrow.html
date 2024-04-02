@@ -9,7 +9,7 @@
         {{ form.hidden_tag() }}
         <table>
             {% for field in form if field.widget.input_type != 'hidden' %}
-                <tr>
+                <tr class={{ field.id }}>
                     <th>{{ field.label }} {% if field.flags.required %}*{% endif %}</th>
                     <td>{{ field }}</td>
                 </tr>
